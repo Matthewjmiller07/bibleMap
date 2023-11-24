@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>Biblical Text Fetcher</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; } /* Set a height for the map */
+    </style>
 </head>
 <body>
     <h1>Biblical Text Fetcher</h1>
@@ -14,6 +19,10 @@
     <div id="textResult"></div>
     <div id="map"></div>
 
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <!-- leaflet-omnivore for KML parsing -->
+    <script src="https://unpkg.com/leaflet-omnivore"></script>
     <script src="script.js"></script>
 </body>
 </html>
