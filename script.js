@@ -9,7 +9,7 @@ async function fetchText(ref) {
         const response = await fetch(`http://www.sefaria.org/api/texts/${ref}`);
         const data = await response.json();
         displayText(data);
-        displayLocations(ref); // Call to display locations related to the reference
+        displayLocations(data.book); // Now passing the book name to the function
     } catch (error) {
         console.error('Error fetching text:', error);
     }
@@ -18,42 +18,35 @@ async function fetchText(ref) {
 function displayText(data) {
     const resultDiv = document.getElementById('textResult');
     resultDiv.innerHTML = `<h2>${data.book}</h2><p>${data.text.join('<br>')}</p>`;
-    // Additional code to handle other data fields
 }
 
-// Initialize the map using Leaflet
 let map;
 function initMap() {
-    map = L.map('map').setView([31.7683, 35.2137], 10); // Example coordinates (Jerusalem)
+    map = L.map('map').setView([31.7683, 35.2137], 10); 
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: 'Map data © OpenStreetMap contributors'
     }).addTo(map);
 }
 
-// Function to display locations from the KML file
-function displayLocations(ref) {
-    const kmlFile = 'gen.kml'; // Path to your KML file
+function displayLocations(book) {
+    const kmlFile = book.replace(/\s+/g, '') + '.kml'; // Construct KML filename from the book name
 
-    // Clear previous layers
     map.eachLayer(function(layer) {
         if (!!layer.toGeoJSON) {
             map.removeLayer(layer);
         }
     });
 
-    // Add new layer from KML
     const customLayer = omnivore.kml(kmlFile)
         .on('ready', function() {
-            // Example: Display all locations from KML
-            // Implement logic here to filter locations based on the ref
             this.eachLayer(function(layer) {
                 layer.addTo(map);
             });
             map.fitBounds(customLayer.getBounds());
         })
         .on('error', function() {
-            console.log('Error loading KML');
+            console.log('Error loading KML:', kmlFile);
         });
 }
 
